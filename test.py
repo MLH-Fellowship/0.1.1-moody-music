@@ -18,5 +18,6 @@ while True:
 
         if curr_track_id != last_track_id: 
             curr_song = Song(curr_track_id, sp)
-            print(curr_song)
+            #print(curr_song)
+            curr_song.full_print()
             last_track_id = curr_track_id

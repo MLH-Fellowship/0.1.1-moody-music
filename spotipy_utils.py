@@ -18,6 +18,36 @@ class Song:
         for artist in track['artists']:
             self.artists.append(artist['name'])
 
+        song_attrs = self.sp.audio_features([self.track_id])[0]       
+        self.acousticness = song_attrs['acousticness']
+        self.danceability = song_attrs['danceability']
+        self.energy = song_attrs['energy']
+        self.instrumentalness = song_attrs['instrumentalness']
+        self.liveness = song_attrs['liveness']
+        self.loudness = song_attrs['loudness']
+        self.speechiness = song_attrs['speechiness']
+        self.tempo = song_attrs['tempo']
+        self.valence = song_attrs['valence']
+
+        print()
+
+    def full_print(self):
+        print("Title: ", self.title)
+        print("Album: ", self.album)
+        print("Artists: ")
+        for artist in self.artists:
+            print(" * ", artist)
+        print("-------------------------------------")
+        print("Acousticness: ", self.acousticness)
+        print("Danceability: ", self.danceability)
+        print("Energy: ", self.energy)
+        print("Instrumentalness: ", self.instrumentalness)
+        print("Liveness: ", self.liveness)
+        print("Loudness: ", self.loudness)
+        print("Speechiness: ", self.speechiness)
+        print("Tempo: ", self.tempo)
+        print("Valence: ", self.valence)
+        
     def __str__(self):
         out = "Title: " + str(self.title) + '\n'
         out += ("Album: " + str(self.album) + '\n')
