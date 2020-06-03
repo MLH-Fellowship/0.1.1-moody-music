@@ -48,3 +48,10 @@ def get_current_track_id(sp):
     curr = sp.current_playback()
     return curr['item']['id']
 
+def currently_playing(sp):
+    state = sp.current_playback()
+
+    if state == None:
+        return False
+    else:
+        return state['is_playing']
