@@ -7,5 +7,5 @@ token = authenticate_user()
 sp = spotipy.Spotify(auth=token)
 
 while True:
-    curr_track = get_current_track(sp)
+    curr_track = get_current_track_id(sp)
     print(curr_track)
