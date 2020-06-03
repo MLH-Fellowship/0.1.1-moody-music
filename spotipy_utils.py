@@ -6,7 +6,7 @@ def authenticate_user():
     CLIENT_SECRET = input("CLIENT_SECRET: ")
     REDIRECT_URI = 'http://localhost:8080'
 
-    scope = ''
+    scope = 'user-read-currently-playing'
 
     username = input("Enter your Spotify username: ")
 
@@ -18,5 +18,3 @@ def authenticate_user():
         print("User not authenticated")
 
     return token
-
-authenticate_user()
