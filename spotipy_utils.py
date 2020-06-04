@@ -111,7 +111,7 @@ def currently_playing(sp):
     else:
         return state['is_playing']
 
-def get_song_rec_id(sp, genres, sf):
+def get_song_rec(sp, genres, sf):
     args = dict()
     args['target_acousticness'] = sf.acousticness
     args['target_danceability'] = sf.danceability
@@ -124,6 +124,10 @@ def get_song_rec_id(sp, genres, sf):
     args['target_valence'] = sf.valence
 
     recs = sp.recommendations(seed_genres=genres,**args)
-    return recs['tracks'][0]['id']
+
+    if recs != None:
+        return Song(track_id=recs['tracks'][0]['id'], sp=sp)
+
+    return None
 
     
