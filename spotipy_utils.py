@@ -107,3 +107,20 @@ def currently_playing(sp):
         return False
     else:
         return state['is_playing']
+
+def get_song_rec_id(sp, genres, sf):
+    args = dict()
+    args['target_acousticness'] = sf.acousticness
+    args['target_danceability'] = sf.danceability
+    args['target_energy'] = sf.energy
+    args['target_instrumentalness'] = sf.instrumentalness
+    args['target_liveness'] = sf.liveness
+    args['target_loudness'] = sf.loudness
+    args['target_speechiness'] = sf.speechiness
+    args['target_tempo'] = sf.tempo
+    args['target_valence'] = sf.valence
+
+    recs = sp.recommendations(seed_genres=genres,**args)
+    return recs['tracks'][0]['id']
+
+    
