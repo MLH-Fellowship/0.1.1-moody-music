@@ -51,8 +51,6 @@ class Song:
 
         self.sf = SongFeatures(track_id=self.track_id,sp=self.sp)
 
-        print()
-
     def full_print(self):
         print("Title: ", self.title)
         print("Album: ", self.album)
@@ -69,6 +67,7 @@ class Song:
         print("Speechiness: ", self.sf.speechiness)
         print("Tempo: ", self.sf.tempo)
         print("Valence: ", self.sf.valence)
+        print()
         
     def __str__(self):
         out = "Title: " + str(self.title) + '\n'
