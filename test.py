@@ -18,11 +18,7 @@ while True:
     else:
         curr_song = get_current_song(sp)
 
-        if last_song == None:
-            print("LAST SONG IS NONE")
-
         if (last_song == None) or (curr_song != None and curr_song.track_id != last_song.track_id): 
             #print(curr_song)
-            print("in here")
             curr_song.full_print()
             last_song = curr_song
