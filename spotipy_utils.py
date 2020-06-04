@@ -82,7 +82,7 @@ def authenticate_user():
     CLIENT_SECRET = input("CLIENT_SECRET: ")
     REDIRECT_URI = 'http://localhost:8080'
 
-    scope = 'user-read-currently-playing user-read-playback-state'
+    scope = 'user-read-currently-playing user-read-playback-state user-modify-playback-state'
 
     username = input("Enter your Spotify username: ")
 
@@ -130,4 +130,9 @@ def get_song_rec(sp, genres, sf):
 
     return None
 
-    
+def add_song_to_queue(sp, song):
+    if sp == None or song == None:
+        return False
+
+    sp.add_to_queue(song.track_id)
+    return True
