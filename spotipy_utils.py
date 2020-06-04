@@ -49,6 +49,7 @@ class Song:
         for artist in track['artists']:
             self.artists.append(artist['name'])
 
+        self.duration_ms = track['duration_ms']
         self.sf = SongFeatures(track_id=self.track_id,sp=self.sp)
 
     def full_print(self):
@@ -57,6 +58,7 @@ class Song:
         print("Artists: ")
         for artist in self.artists:
             print(" * ", artist)
+        print("Duration: ", self.duration_ms, " ms")
         print("Track ID: ", self.track_id)
         print("-------------------------------------")
         print("Acousticness: ", self.sf.acousticness)
@@ -76,6 +78,7 @@ class Song:
         out += "Aritsts:\n"
         for artist in self.artists:
             out += (" * " + artist + "\n")
+        out += ("Duration: " + str(self.duration_ms) + " ms")
         out += ("Track ID: " + self.track_id)
         return out
 
