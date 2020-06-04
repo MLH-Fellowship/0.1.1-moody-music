@@ -1,5 +1,7 @@
-# Designed to return metrics for reccomendations from percentage of face emotions
+import numpy as np
+from spotipy_utils import *
 
+# Designed to return metrics for reccomendations from percentage of face emotions
 def get_valence(Anger,Disgust,Fear,Happy,Sad,Surprise,Neutral): # float between 0 and 1
 	
 	if ((Sad + Disgust + Fear + Neutral)/4) > (Anger + Happy + Neutral)/3 :
@@ -37,5 +39,66 @@ def get_dancebility(Anger,Disgust,Fear,Happy,Sad,Surprise,Neutral): #float betww
 	else:
 		if ((Anger + Happy)/2)*1.6666 > 1: #just in case clause
 		   return 0.999
-		return ((Anger + Happy)/2)*1.6666 
+		return ((Anger + Happy)/2)*1.6666
+
+class Mood:
+    def __init__(self, num_samples):
+        self.anger = np.zeros(num_samples)
+        self.anger[:] = np.NaN
+        self.disgust = np.zeros(num_samples)
+        self.disgust[:] = np.NaN
+        self.fear = np.zeros(num_samples)
+        self.fear[:] = np.NaN
+        self.happy = np.zeros(num_samples)
+        self.happy[:] = np.NaN
+        self.sad = np.zeros(num_samples)
+        self.sad[:] = np.NaN
+        self.surprise = np.zeros(num_samples)
+        self.surprise[:] = np.NaN
+        self.neutral = np.zeros(num_samples)
+        self.neutral[:] = np.NaN
+
+        self.num_samples = num_samples
+        self.counter = 0
+
+    def get_emotion_dict(self):
+        emotions = dict()
+
+        emotions['Anger'] = np.nanmean(self.anger)
+        emotions['Disgust'] = np.nanmean(self.disgust)
+        emotions['Fear'] = np.nanmean(self.fear)
+        emotions['Happy'] = np.nanmean(self.happy)
+        emotions['Sad'] = np.nanmean(self.sad)
+        emotions['Surprise'] = np.nanmean(self.surprise)
+        emotions['Neutral'] = np.nanmean(self.neutral)
+
+        return emotions
+
+    def add_data_point(self, emotions):
+        index = self.counter % self.num_samples
+        self.anger[index] = emotions['Anger']
+        self.disgust[index] = emotions['Disgust']
+        self.fear[index] = emotions['Fear']
+        self.happy[index] = emotions['Happy']
+        self.sad[index] = emotions['Sad']
+        self.surprise[index] = emotions['Surprise']
+        self.neutral[index] = emotions['Neutral']
+        
+        self.counter += 1
+
+    def get_song_features(self):
+        emotions = self.get_emotion_dict()
+        
+        sf = SongFeatures()
+        sf.valence = get_valence(**emotions)
+        print("Valence: ", sf.valence)
+        sf.tempo = get_tempo(**emotions)
+        print("Tempo: ", sf.tempo)
+        sf.energy = get_energy(**emotions)
+        print("Energy: ", sf.energy)
+        sf.danceability = get_dancebility(**emotions)
+        print("Danceability: ", sf.danceability)
+
+        return sf
+    
 	
