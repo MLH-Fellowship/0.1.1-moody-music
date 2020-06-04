@@ -98,6 +98,10 @@ def authenticate_user():
 
 def get_current_track_id(sp):
     curr = sp.current_playback()
+
+    if curr == None:
+        return None
+    
     return curr['item']['id']
 
 def currently_playing(sp):
