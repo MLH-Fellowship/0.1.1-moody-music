@@ -1,23 +1,28 @@
 import spotipy
 import spotipy.util as util
 from spotipy_utils import *
+import time
 
 
 token = authenticate_user()
 sp = spotipy.Spotify(auth=token)
 
-last_track_id = None
+last_song = None
 
 print()
 
 while True:
     if not currently_playing(sp):
-        last_track_id = None
+        last_song = None
+        time.sleep(1)
     else:
-        curr_track_id = get_current_track_id(sp)
+        curr_song = get_current_song(sp)
 
-        if curr_track_id != None and curr_track_id != last_track_id: 
-            curr_song = Song(curr_track_id, sp)
+        if last_song == None:
+            print("LAST SONG IS NONE")
+
+        if (last_song == None) or (curr_song != None and curr_song.track_id != last_song.track_id): 
             #print(curr_song)
+            print("in here")
             curr_song.full_print()
-            last_track_id = curr_track_id
+            last_song = curr_song

@@ -96,13 +96,13 @@ def authenticate_user():
 
     return token
 
-def get_current_track_id(sp):
+def get_current_song(sp):
     curr = sp.current_playback()
 
     if curr == None:
         return None
     
-    return curr['item']['id']
+    return Song(track_id=curr['item']['id'], sp=sp)
 
 def currently_playing(sp):
     state = sp.current_playback()
