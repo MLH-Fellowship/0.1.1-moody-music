@@ -35,6 +35,8 @@ class Mood:
         emotions['Surprise'] = np.nanmean(self.surprise)
         emotions['Neutral'] = np.nanmean(self.neutral)
 
+        return emotions
+
     def add_data_point(self, emotions):
         index = self.counter % self.num_samples
         self.anger[index] = emotions['Anger']
