@@ -52,13 +52,13 @@ class Mood:
 def get_emotions():
     emotions = dict()
 
-    emotions['Anger'] = 0.15
-    emotions['Disgust'] = 0.01
-    emotions['Fear'] = 0.01
-    emotions['Happy'] = 0.01
-    emotions['Sad'] = 0.8
-    emotions['Surprise'] = 0.01
-    emotions['Neutral'] = 0.01
+    emotions['Anger'] = random.random()
+    emotions['Disgust'] = random.random()
+    emotions['Fear'] = random.random()
+    emotions['Happy'] = random.random()
+    emotions['Sad'] = random.random()
+    emotions['Surprise'] = random.random()
+    emotions['Neutral'] = random.random()
 
     return emotions
 
