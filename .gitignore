@@ -1,5 +1,6 @@
 .cache*
 __pycache__/
-env/.env/.blackbox/pubring.gpg~
+env/.env
+/.blackbox/pubring.gpg~
 /.blackbox/pubring.kbx~
 /.blackbox/secring.gpg
