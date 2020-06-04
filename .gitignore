@@ -1,6 +1,9 @@
+
+data/fer2013.csv
 .cache*
 __pycache__/
 /.blackbox/pubring.gpg~
 /.blackbox/pubring.kbx~
 /.blackbox/secring.gpg
 /env/.env
+
