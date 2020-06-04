@@ -57,6 +57,7 @@ class Song:
         print("Artists: ")
         for artist in self.artists:
             print(" * ", artist)
+        print("Track ID: ", self.track_id)
         print("-------------------------------------")
         print("Acousticness: ", self.sf.acousticness)
         print("Danceability: ", self.sf.danceability)
@@ -75,6 +76,7 @@ class Song:
         out += "Aritsts:\n"
         for artist in self.artists:
             out += (" * " + artist + "\n")
+        out += ("Track ID: " + self.track_id)
         return out
 
 def authenticate_user():
