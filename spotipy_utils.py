@@ -82,16 +82,21 @@ class Song:
         out += ("Track ID: " + self.track_id)
         return out
 
+# Returns authentication token if successful, None otherwise
 def authenticate_user():
-    CLIENT_ID = input("CLIENT_KEY: ")
-    CLIENT_SECRET = input("CLIENT_SECRET: ")
+    try:
+        with open("env/.env") as f:
+            data = f.readlines()
+            client_id = data[0].strip().split(' ')[-1]
+            client_secret = data[1].strip().split(' ')[-1]
+    except:
+        return None # If file does not exist
+
     REDIRECT_URI = 'http://localhost:8080'
-
     scope = 'user-read-currently-playing user-read-playback-state user-modify-playback-state'
-
     username = input("Enter your Spotify username: ")
 
-    token = util.prompt_for_user_token(username, scope, CLIENT_ID, CLIENT_SECRET, REDIRECT_URI)
+    token = util.prompt_for_user_token(username, scope, client_id, client_secret, REDIRECT_URI)
 
     if token:
         print("User authenticated")
