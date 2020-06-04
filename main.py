@@ -1,6 +1,7 @@
 import spotipy.util as util
 from spotipy_utils import *
 import numpy as np
+import random
 import time
 import mood
 
@@ -21,7 +22,7 @@ class Mood:
         self.neutral = np.zeros(num_samples)
         self.neutral[:] = np.NaN
 
-        self.num_samples = 0
+        self.num_samples = num_samples
         self.counter = 0
 
     def get_emotion_dict(self):
@@ -47,7 +48,7 @@ class Mood:
         self.surprise[index] = emotions['Surprise']
         self.neutral[index] = emotions['Neutral']
         
-        self.num_samples += 1
+        self.counter += 1
         
 def get_emotions():
     emotions = dict()
@@ -90,12 +91,14 @@ if not token:
 
 sp = spotipy.Spotify(auth=token)
 
+mood = Mood(NUM_SAMPLES)
 while True:
     while time.time() - prev_sample_time < SAMPLE_PERIOD:
         pass
 
     prev_sample_time = time.time()
-    print("Ding!")
+    emotions = get_emotions()
+    mood.add_data_point(emotions)
 
 sf = emotions_to_song_features(get_emotions())
 
