@@ -3,7 +3,7 @@ from spotipy_utils import *
 import numpy as np
 import random
 import time
-import mood
+import mood as md
 
 class Mood:
     def __init__(self, num_samples):
@@ -49,6 +49,22 @@ class Mood:
         self.neutral[index] = emotions['Neutral']
         
         self.counter += 1
+
+    def get_song_features(self):
+        emotions = self.get_emotion_dict()
+        
+        sf = SongFeatures()
+        sf.valence = md.get_valence(**emotions)
+        print("Valence: ", sf.valence)
+        sf.tempo = md.get_tempo(**emotions)
+        print("Tempo: ", sf.tempo)
+        sf.energy = md.get_energy(**emotions)
+        print("Energy: ", sf.energy)
+        sf.danceability = md.get_dancebility(**emotions)
+        print("Danceability: ", sf.danceability)
+
+        return sf
+    
         
 def get_emotions():
     emotions = dict()
@@ -63,19 +79,7 @@ def get_emotions():
 
     return emotions
 
-def emotions_to_song_features(emotions):
-    sf = SongFeatures()
-    sf.valence = mood.get_valence(**emotions)
-    print("Valence: ", sf.valence)
-    sf.tempo = mood.get_tempo(**emotions)
-    print("Tempo: ", sf.tempo)
-    sf.energy = mood.get_energy(**emotions)
-    print("Energy: ", sf.energy)
-    sf.danceability = mood.get_dancebility(**emotions)
-    print("Danceability: ", sf.danceability)
 
-    return sf
-    
 
 NUM_SAMPLES = 10 # number of samples for avg emotion
 SAMPLE_PERIOD = 1 # in seconds
@@ -99,6 +103,8 @@ while True:
     prev_sample_time = time.time()
     emotions = get_emotions()
     mood.add_data_point(emotions)
+
+    print(mood.get_song_features())
 
 sf = emotions_to_song_features(get_emotions())
 
