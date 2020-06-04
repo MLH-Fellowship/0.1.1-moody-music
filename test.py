@@ -5,6 +5,10 @@ import time
 
 
 token = authenticate_user()
+if not token:
+    print("Could not authenticate, stopping")
+    exit()
+
 sp = spotipy.Spotify(auth=token)
 
 last_song = None
