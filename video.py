@@ -1,5 +1,6 @@
 import os
 import cv2
+import time
 import numpy as np
 from tensorflow.keras.models import model_from_json
 from tensorflow.keras.preprocessing import image
@@ -19,6 +20,7 @@ face_haar_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 cap=cv2.VideoCapture(0)
 
 predicted_emotion = ""
+start = time.time()
 while True:
     ret,test_img=cap.read()# captures frame and returns boolean value and captured image
     if not ret:
@@ -42,13 +44,16 @@ while True:
         max_index = np.argmax(predictions[0])
         moods = predictions[0]
         emotions = ('angry', 'disgust', 'fear', 'happy', 'sad', 'surprise', 'neutral')
-        y_pos = np.arange(len(emotions))
-        res = plt.bar(y_pos, moods, align='center', alpha=0.5)
-        plt.xticks(y_pos, emotions)
-        plt.ylabel('percentage')
-        plt.title('emotion')
-        plt.show()
-
+        current = time.time()
+        if current-start >= 3:  
+            plt.close()          
+            y_pos = np.arange(len(emotions))
+            res = plt.bar(y_pos, moods, align='center', alpha=0.5)
+            plt.xticks(y_pos, emotions)
+            plt.ylabel('percentage')
+            plt.title('emotion')
+            plt.show(block=False)
+            start = time.time()
 
         if predicted_emotion != emotions[max_index]:
             print("The current emotion is " + predicted_emotion)
