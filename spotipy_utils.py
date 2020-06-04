@@ -100,6 +100,7 @@ def authenticate_user():
 
     return token
 
+# Returns None if no song is playing
 def get_current_song(sp):
     curr = sp.current_playback()
 
@@ -134,6 +135,17 @@ def get_song_rec(sp, genres, sf):
         return Song(track_id=recs['tracks'][0]['id'], sp=sp)
 
     return None
+
+# Returns None if no song is playing (or if user is in a private session)
+def get_song_progress(sp):
+    curr_song = get_current_song(sp)
+    state = sp.current_playback()
+    
+    if curr_song == None or state == None:
+        return None
+    
+    progress = 1.0 * state['progress_ms'] / curr_song.duration_ms
+    return progress
 
 def add_song_to_queue(sp, song):
     if sp == None or song == None:

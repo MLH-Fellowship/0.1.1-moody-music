@@ -19,6 +19,6 @@ while True:
         curr_song = get_current_song(sp)
 
         if (last_song == None) or (curr_song != None and curr_song.track_id != last_song.track_id): 
-            #print(curr_song)
             curr_song.full_print()
+            print("Progress: ", get_song_progress(sp), "\n")
             last_song = curr_song
