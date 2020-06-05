@@ -21,9 +21,12 @@ SAMPLE_PERIOD = 1 # in seconds
 
 mood = md.Mood(NUM_SAMPLES)
 prev_sample_time = 0
+last_track = None
+added_song_rec = False
 
 # Inspired by: https://pythonprogramming.net/
 # ML models inspired by: https://sefiks.com/2018/01/01/facial-expression-recognition-with-keras/
+
 def get_emotions():
     emotions = dict()
 
@@ -37,18 +40,30 @@ def get_emotions():
 
     return emotions
 
-def next_song():
-    global mood
+def add_song_rec_to_queue(mood):
+    global added_song_rec
     
     sf = mood.get_song_features_alt()
     print("Valence: ", sf.valence, " Danceability: ", sf.danceability, " Energy: ", sf.energy)
     song_rec = get_song_rec(sp,['pop','rock','alternative'],sf)
+
     add_song_to_queue(sp,song_rec)
-    sp.next_track()
+    added_song_rec = True
 
     print("I recommended: ")
     print(song_rec)
     print()
+
+    return song_rec
+
+def next_song():
+    global mood
+    global added_song_rec
+
+    if not added_song_rec:
+        add_song_rec_to_queue(mood)
+    
+    sp.next_track()
 
 def get_user_live_emotions():
     global model
@@ -88,6 +103,25 @@ def create_emotion_bar_graph(emotions):
 
     plt.savefig("emotions.png")
     plt.clf()
+
+def handle_track_change():
+    global last_track
+    global added_song_rec
+    
+    curr_track = get_current_song(sp)
+
+    # Check if track has changed
+    if last_track == None and curr_track != None:
+        last_track = curr_track
+        added_song_rec = False # reset
+        return True
+    if last_track != None and curr_track != None:
+        if last_track.track_id != curr_track.track_id:
+            print("RESET")
+            last_track = curr_track
+            added_song_rec = False # reset
+            return True
+    return False
 
 class Window(Frame):
     def __init__(self, master=None):
@@ -141,7 +175,13 @@ while True:
         mood.add_data_point(emotions)
         create_emotion_bar_graph(mood.get_emotion_dict())
 
+    # Check song progress, add to queue if necessary
+    progress = get_song_progress(sp)
+    if progress != None and added_song_rec == False and progress >= 0.8:
+        add_song_rec_to_queue(mood)
+
     app.showImg()
-    
+
+    handle_track_change()
     root.update_idletasks()
     root.update()

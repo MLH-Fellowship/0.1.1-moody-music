@@ -78,7 +78,7 @@ class Song:
         out += "Aritsts:\n"
         for artist in self.artists:
             out += (" * " + artist + "\n")
-        out += ("Duration: " + str(self.duration_ms) + " ms")
+        out += ("Duration: " + str(self.duration_ms) + " ms\n")
         out += ("Track ID: " + self.track_id)
         return out
 
