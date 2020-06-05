@@ -25,6 +25,7 @@ prev_sample_time = 0
 last_track = None
 added_song_rec = False
 username = ""
+genre_selection = list()
 
 # Inspired by: https://pythonprogramming.net/
 # ML models inspired by: https://sefiks.com/2018/01/01/facial-expression-recognition-with-keras/
@@ -194,12 +195,18 @@ class GenreSelectionWindow(Frame):
         ROWS = math.ceil(1.0 * len(items) / COLS)
 
         submitButton= Button(self.master,text="Submit",command=self.submit)
-        submitButton.grid(row=ROWS+2,column=int(COLS/2) + 1)#(relx=0.5,rely=0.5,anchor=CENTER)
+        submitButton.grid(row=ROWS+3,column=int(COLS/2) + 1)#(relx=0.5,rely=0.5,anchor=CENTER)
         submitButton.config(font=("Ariel",14))
 
-        label = Label(self.master,text="Choose at least one and at most five genres to listen to.",font=("Ariel",18))
+        label = Label(self.master,text="What genres would you like to listen to?",font=("Ariel",18))
         label.grid(row=ROWS+1,columnspan=COLS+1)
         label.configure(anchor=CENTER)
+
+        
+        label = Label(self.master,text="(choose at least one and at most five)",font=("Ariel",16))
+        label.grid(row=ROWS+2,columnspan=COLS+1)
+        label.configure(anchor=CENTER)
+
         
         for i,item in enumerate(items):
             r = int(i / COLS) # row number
@@ -217,7 +224,13 @@ class GenreSelectionWindow(Frame):
         for key in self.ch_genres:
             if self.ch_genres[key].get() == '1':
                 checked.append(key)
-        print(checked)
+
+        if len(checked) < 1 or len(checked) > 5:
+            return # user needs to choose between 1 and 5 genres, so do not accept request
+
+        global genre_selection
+        genre_selection = checked
+        self.master.destroy()
 
     
             
@@ -228,6 +241,10 @@ root.geometry("800x800")
 genreSelect = GenreSelectionWindow(root,sp=spotipy.Spotify(auth=authenticate_user('dts182')))
 genreSelect.master.mainloop()
 
+print(genre_selection)
+
+root = Tk()
+root.geometry("800x800")
 
 entry = EntryWindow(root)
 entry.mainloop()
