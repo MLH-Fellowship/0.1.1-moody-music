@@ -14,6 +14,7 @@ from tensorflow.keras.preprocessing import image
 import matplotlib
 from matplotlib import pyplot as plt
 from matplotlib import animation
+from PIL import Image, ImageTk
 
 NUM_SAMPLES = 10 # number of samples for avg emotion
 SAMPLE_PERIOD = 1 # in seconds
@@ -100,8 +101,16 @@ class Window(Frame):
         skipButton = Button(self, text="Skip", command=next_song)
         skipButton.place(x=0,y=0)
 
+    def showImg(self):
+        load = Image.open('emotions.png')
+        render = ImageTk.PhotoImage(load)
+
+        img = Label(self,image=render)
+        img.image = render
+        img.place(x=40,y=40)
+
 root = Tk()
-root.geometry("400x300")
+root.geometry("800x800")
 app = Window(root)
 
 #load model
@@ -133,6 +142,8 @@ while True:
         create_emotion_bar_graph(mood.get_emotion_dict())
     else:
         print("Scrap")
+
+    app.showImg()
     
     root.update_idletasks()
     root.update()
