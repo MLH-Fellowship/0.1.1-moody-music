@@ -1,3 +1,4 @@
+from tkinter import *
 import spotipy.util as util
 from spotipy_utils import *
 import numpy as np
@@ -7,14 +8,11 @@ import mood as md
 
 NUM_SAMPLES = 10 # number of samples for avg emotion
 SAMPLE_PERIOD = 1 # in seconds
-PERIODS_TO_REFRESH = 5 # how many periods to wait until playlist is updated
-PLAYLIST_NAME = "MoodyMusicPlaylist"
 
+mood = md.Mood(NUM_SAMPLES)
 prev_sample_time = 0
-last_track = None
-periods = 0
 
-        
+# Inspired by: https://pythonprogramming.net/
 def get_emotions():
     emotions = dict()
 
@@ -28,71 +26,51 @@ def get_emotions():
 
     return emotions
 
-def track_has_changed():
-    global last_track
-    
-    curr_track = get_current_song(sp)
-    if last_track == None and curr_track != None:
-        last_track = curr_track
-        return True
-    if last_track != None and curr_track != None:
-        if last_track.track_id != curr_track.track_id:
-            last_track = curr_track
-            return True
-    return False
-    
-def handle_track_change(sp, mood):
-    global last_track
+def next_song():
+    global mood
     
     sf = mood.get_song_features()
-    song_rec = get_song_rec(sp, ['pop','rock','alt'], sf)
-    add_song_to_queue(sp, song_rec)
+    song_rec = get_song_rec(sp,['pop','rock','alternative'],sf)
+    add_song_to_queue(sp,song_rec)
     sp.next_track()
-
-    # Wait until song is actually skipped (some delay here, don't want runaway skipping)
-    while get_current_song(sp).track_id != song_rec.track_id:
-        pass
-
-    last_track = song_rec
 
     print("I recommended: ")
     print(song_rec)
     print()
 
-def update 
-    
+class Window(Frame):
+    def __init__(self, master=None):
+        Frame.__init__(self,master)
+        self.master = master
+        self.init_window()
+
+    def init_window(self):
+        self.master.title("MoodyMusic")
+        self.pack(fill=BOTH,expand=1)
+        skipButton = Button(self, text="Skip", command=next_song)
+        skipButton.place(x=0,y=0)
+
+root = Tk()
+root.geometry("400x300")
+app = Window(root)
+
 
 # Main Code
 token, username = authenticate_user()
 if not token:
     print("Could not authenticate, aborting...")
     exit()
-
+    
 sp = spotipy.Spotify(auth=token)
-playlist_id = get_playlist_id(sp, username, PLAYLIST_NAME)
-if playlist_id == None:
-    print("Playlist DNE")
-    playlist_id = create_playlist(sp, username, PLAYLIST_NAME)
-
-mood = md.Mood(NUM_SAMPLES)
 while True:
     # Wait for sample period
     while time.time() - prev_sample_time < SAMPLE_PERIOD:
-        # Check if song has changed
-        if track_has_changed():
-            handle_track_change(sp, mood)
         pass
 
     # Record emotions and update mood
     prev_sample_time = time.time()
     emotions = get_emotions()
     mood.add_data_point(emotions)
-
-    # Check if song has changed
-    if track_has_changed():
-        handle_track_change(sp, mood)
-
-sf = emotions_to_song_features(get_emotions())
-
-song = get_song_rec(sp, ['pop','rock','alternative'], sf)
-print(song)
+    
+    root.update_idletasks()
+    root.update()
