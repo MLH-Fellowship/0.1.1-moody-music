@@ -4,6 +4,13 @@ import numpy as np
 import random
 import time
 import mood as md
+
+NUM_SAMPLES = 10 # number of samples for avg emotion
+SAMPLE_PERIOD = 1 # in seconds
+
+prev_sample_time = 0
+last_track = None
+
         
 def get_emotions():
     emotions = dict()
@@ -18,14 +25,14 @@ def get_emotions():
 
     return emotions
 
-
-
-NUM_SAMPLES = 10 # number of samples for avg emotion
-SAMPLE_PERIOD = 1 # in seconds
-
-prev_sample_time = 0
-last_track = None
-
+def track_has_changed():
+    global last_track
+    
+    curr_track = get_current_song(sp)
+    if (last_track == None and curr_track != None) or (last_track != None and curr_track != None and last_track.track_id != curr_track.track_id):
+        last_track = curr_track
+        return True
+    return False
 
 # Main Code
 token = authenticate_user()
@@ -47,10 +54,8 @@ while True:
     mood.add_data_point(emotions)
 
     # Check if song has changed
-    curr_track = get_current_song(sp)
-    if (last_track == None and curr_track != None) or (last_track != None and curr_track != None and last_track.track_id != curr_track.track_id):
-        print("New Song!")
-        last_track = curr_track
+    if track_has_changed():
+        print("Track changed!")
 
 sf = emotions_to_song_features(get_emotions())
 
