@@ -15,6 +15,7 @@ import matplotlib
 from matplotlib import pyplot as plt
 from matplotlib import animation
 from PIL import Image, ImageTk
+import math
 
 NUM_SAMPLES = 10 # number of samples for avg emotion
 SAMPLE_PERIOD = 1 # in seconds
@@ -177,30 +178,38 @@ class EntryWindow(Frame):
         self.master.destroy()
 
 class GenreSelectionWindow(Frame):
-    def __init__(self,master=None):
+    def __init__(self,master=None,sp=None):
         Frame.__init__(self,master)
         self.master = master
-        self.init_window()
+        self.init_window(sp)
 
-    def init_window(self):
+    def init_window(self,sp):
         self.master.title("MoodyMusic")
-        self.pack(fill=BOTH,expand=1)
+        #self.pack(fill=BOTH,expand=1)
 
-        items = ["A","B","C","D"]
+        items = get_genre_options(sp)
         self.ch_genres = dict(zip(items,np.zeros(len(items)).tolist()))
 
-        for item in self.ch_genres:
+        COLS = 7
+        ROWS = math.ceil(1.0 * len(items) / COLS)
+        for i,item in enumerate(items):
+            r = int(i / COLS) # row number
+            c = i % COLS # col number
+            
             self.ch_genres[item] = Variable()
             l = Checkbutton(root, text=item, variable=self.ch_genres[item],state=NORMAL)
             self.ch_genres[item].set('0')
-            l.pack(anchor=CENTER)
+            l.grid(row=r+1,column=c+1)
 
         submitButton = Button(self,text="Submit",command=self.submit)
-        submitButton.place(relx=0.5,rely=0.5,anchor=CENTER)
+        submitButton.grid(row=ROWS+1,column=int(COLS/2))
 
     def submit(self):
+        checked = list()
         for key in self.ch_genres:
-            print(key, ": ", self.ch_genres[key].get())
+            if self.ch_genres[key].get() == '1':
+                checked.append(key)
+        print(checked)
 
     
             
@@ -208,7 +217,7 @@ class GenreSelectionWindow(Frame):
 root = Tk()
 root.geometry("800x800")
 
-genreSelect = GenreSelectionWindow(root)
+genreSelect = GenreSelectionWindow(root,sp=spotipy.Spotify(auth=authenticate_user('dts182')))
 genreSelect.mainloop()
 
 

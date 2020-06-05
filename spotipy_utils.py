@@ -170,3 +170,6 @@ def get_playlist_id(sp, username, target_name):
 def create_playlist(sp, username, name):
     playlist = sp.user_playlist_create(username, name, public=False)
     return playlist['id']
+
+def get_genre_options(sp):
+    return sp.recommendation_genre_seeds()['genres']
