@@ -65,6 +65,9 @@ if not token:
 
 sp = spotipy.Spotify(auth=token)
 
+if get_playlist_id(sp, username, 'MoodyMusicPlaylist') == None:
+    print("Playlist DNE")
+
 mood = md.Mood(NUM_SAMPLES)
 while True:
     # Wait for sample period

@@ -93,7 +93,7 @@ def authenticate_user():
         return None # If file does not exist
 
     REDIRECT_URI = 'http://localhost:8080'
-    scope = 'user-read-currently-playing user-read-playback-state user-modify-playback-state'
+    scope = 'user-read-currently-playing user-read-playback-state user-modify-playback-state playlist-modify-public playlist-modify-private'
     username = input("Enter your Spotify username: ")
 
     token = util.prompt_for_user_token(username, scope, client_id, client_secret, REDIRECT_URI)
@@ -158,3 +158,13 @@ def add_song_to_queue(sp, song):
 
     sp.add_to_queue(song.track_id)
     return True
+
+def get_playlist_id(sp, username, target_name):
+    user_playlists = sp.user_playlists(username)['items']
+
+    for playlist in user_playlists:
+        playlist_name = playlist['name']
+        if playlist_name == target_name:
+            return playlist['id']
+    return None
+    
