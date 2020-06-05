@@ -55,6 +55,17 @@ def capture_face():
     plt.imshow(gray_img)
     plt.savefig("test.png")
 
+    faces_detected = face_haar_cascade.detectMultiScale(gray_img, 1.32, 5)
+    for (x,y,w,h) in faces_detected:
+        roi_gray=gray_img[y:y+w,x:x+h]#cropping region of interest i.e. face area from  image
+        roi_gray=cv2.resize(roi_gray,(48,48))
+        img_pixels = image.img_to_array(roi_gray)
+        img_pixels = np.expand_dims(img_pixels, axis = 0)
+        img_pixels /= 255
+        
+        plt.imshow(roi_gray)
+        plt.savefig("face.png")
+
 class Window(Frame):
     def __init__(self, master=None):
         Frame.__init__(self,master)
