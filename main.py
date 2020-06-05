@@ -176,8 +176,41 @@ class EntryWindow(Frame):
         username = str(self.editText.get())
         self.master.destroy()
 
+class GenreSelectionWindow(Frame):
+    def __init__(self,master=None):
+        Frame.__init__(self,master)
+        self.master = master
+        self.init_window()
+
+    def init_window(self):
+        self.master.title("MoodyMusic")
+        self.pack(fill=BOTH,expand=1)
+
+        items = ["A","B","C","D"]
+        self.ch_genres = dict(zip(items,np.zeros(len(items)).tolist()))
+
+        for item in self.ch_genres:
+            self.ch_genres[item] = Variable()
+            l = Checkbutton(root, text=item, variable=self.ch_genres[item],state=NORMAL)
+            self.ch_genres[item].set('0')
+            l.pack(anchor=CENTER)
+
+        submitButton = Button(self,text="Submit",command=self.submit)
+        submitButton.place(relx=0.5,rely=0.5,anchor=CENTER)
+
+    def submit(self):
+        for key in self.ch_genres:
+            print(key, ": ", self.ch_genres[key].get())
+
+    
+            
+
 root = Tk()
 root.geometry("800x800")
+
+genreSelect = GenreSelectionWindow(root)
+genreSelect.mainloop()
+
 
 entry = EntryWindow(root)
 entry.mainloop()
