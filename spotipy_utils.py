@@ -93,7 +93,7 @@ def authenticate_user():
         return None # If file does not exist
 
     REDIRECT_URI = 'http://localhost:8080'
-    scope = 'user-read-currently-playing user-read-playback-state user-modify-playback-state playlist-modify-public playlist-modify-private'
+    scope = 'user-read-currently-playing user-read-playback-state user-modify-playback-state playlist-modify-public playlist-read-private playlist-modify-private'
     username = input("Enter your Spotify username: ")
 
     token = util.prompt_for_user_token(username, scope, client_id, client_secret, REDIRECT_URI)
