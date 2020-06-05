@@ -5,6 +5,15 @@ import numpy as np
 import random
 import time
 import mood as md
+import os
+import cv2
+import time
+import numpy as np
+from tensorflow.keras.models import model_from_json
+from tensorflow.keras.preprocessing import image
+import matplotlib
+from matplotlib import pyplot as plt
+from matplotlib import animation
 
 NUM_SAMPLES = 10 # number of samples for avg emotion
 SAMPLE_PERIOD = 1 # in seconds
@@ -38,6 +47,14 @@ def next_song():
     print(song_rec)
     print()
 
+def capture_face():
+    ret,test_img=cap.read()# captures frame and returns boolean value and captured image
+    if not ret:
+        return
+    gray_img= cv2.cvtColor(test_img, cv2.COLOR_BGR2GRAY)
+    plt.imshow(gray_img)
+    plt.savefig("test.png")
+
 class Window(Frame):
     def __init__(self, master=None):
         Frame.__init__(self,master)
@@ -54,6 +71,12 @@ root = Tk()
 root.geometry("400x300")
 app = Window(root)
 
+#load model
+model = model_from_json(open("fer.json", "r").read())
+#load weights
+model.load_weights('fer.h5')
+face_haar_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+cap=cv2.VideoCapture(0)
 
 # Main Code
 token, username = authenticate_user()
@@ -67,8 +90,12 @@ while True:
     while time.time() - prev_sample_time < SAMPLE_PERIOD:
         pass
 
-    # Record emotions and update mood
+    # Record emotions
     prev_sample_time = time.time()
+    capture_face()
+
+
+    # Update mood
     emotions = get_emotions()
     mood.add_data_point(emotions)
     
