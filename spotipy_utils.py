@@ -167,4 +167,7 @@ def get_playlist_id(sp, username, target_name):
         if playlist_name == target_name:
             return playlist['id']
     return None
-    
+
+def create_playlist(sp, username, name):
+    playlist = sp.user_playlist_create(username, name, public=False)
+    return playlist['id']

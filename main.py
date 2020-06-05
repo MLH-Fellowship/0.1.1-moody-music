@@ -7,6 +7,7 @@ import mood as md
 
 NUM_SAMPLES = 10 # number of samples for avg emotion
 SAMPLE_PERIOD = 1 # in seconds
+PLAYLIST_NAME = "MoodyMusicPlaylist"
 
 prev_sample_time = 0
 last_track = None
@@ -64,9 +65,10 @@ if not token:
     exit()
 
 sp = spotipy.Spotify(auth=token)
-
-if get_playlist_id(sp, username, 'MoodyMusicPlaylist') == None:
+playlist_id = get_playlist_id(sp, username, PLAYLIST_NAME)
+if playlist_id == None:
     print("Playlist DNE")
+    playlist_id = create_playlist(sp, username, PLAYLIST_NAME)
 
 mood = md.Mood(NUM_SAMPLES)
 while True:
