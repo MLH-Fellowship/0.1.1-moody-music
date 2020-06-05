@@ -234,21 +234,29 @@ class GenreSelectionWindow(Frame):
 
     
             
+# Main code
 
-root = Tk()
-root.geometry("800x800")
-
-genreSelect = GenreSelectionWindow(root,sp=spotipy.Spotify(auth=authenticate_user('dts182')))
-genreSelect.master.mainloop()
-
-print(genre_selection)
-
+# FIRST WINDOW: Get username and authenticate
 root = Tk()
 root.geometry("800x800")
 
 entry = EntryWindow(root)
 entry.mainloop()
 
+token = authenticate_user(username)
+if not token:
+    print("Could not authenticate, aborting...")
+    exit()   
+sp = spotipy.Spotify(auth=token)
+
+# SECOND WINDOW: Select genres
+root = Tk()
+root.geometry("800x800")
+
+genreSelect = GenreSelectionWindow(root,sp=spotipy.Spotify(auth=authenticate_user('dts182')))
+genreSelect.master.mainloop()
+
+# THIRD WINDOW: Listen to music
 root = Tk()
 root.geometry("800x800")
 app = Window(root)
@@ -260,13 +268,6 @@ model.load_weights('fer.h5')
 face_haar_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 cap=cv2.VideoCapture(0)
 
-# Main Code
-token = authenticate_user(username)
-if not token:
-    print("Could not authenticate, aborting...")
-    exit()
-    
-sp = spotipy.Spotify(auth=token)
 while True:
     # Wait for sample period
     while time.time() - prev_sample_time < SAMPLE_PERIOD:
