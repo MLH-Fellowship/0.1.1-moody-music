@@ -49,7 +49,7 @@ def add_song_rec_to_queue(mood):
     global genre_selection
     
     sf = mood.get_song_features_alt()
-    print("Valence: ", sf.valence, " Danceability: ", sf.danceability, " Energy: ", sf.energy)
+    #print("Valence: ", sf.valence, " Danceability: ", sf.danceability, " Energy: ", sf.energy)
     song_rec = get_song_rec(sp,genre_selection,sf)
 
     try:
@@ -57,9 +57,9 @@ def add_song_rec_to_queue(mood):
             add_song_to_queue(sp,song_rec)
             added_song_rec = True
 
-            print("I recommended: ")
-            print(song_rec)
-            print()
+            #print("I recommended: ")
+            #print(song_rec)
+            #print()
     except:
         print("Couldn't identify an active device. Try playing music on the device you want to use")
         return False
@@ -128,7 +128,6 @@ def handle_track_change():
         return True
     if last_track != None and curr_track != None:
         if last_track.track_id != curr_track.track_id:
-            print("RESET")
             last_track = curr_track
             added_song_rec = False # reset
             return True
