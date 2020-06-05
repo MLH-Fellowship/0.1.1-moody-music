@@ -29,13 +29,36 @@ def track_has_changed():
     global last_track
     
     curr_track = get_current_song(sp)
-    if (last_track == None and curr_track != None) or (last_track != None and curr_track != None and last_track.track_id != curr_track.track_id):
+    if last_track == None and curr_track != None:
         last_track = curr_track
         return True
+    if last_track != None and curr_track != None:
+        if last_track.track_id != curr_track.track_id:
+            last_track = curr_track
+            return True
     return False
+    
+def handle_track_change(sp, mood):
+    global last_track
+    
+    sf = mood.get_song_features()
+    song_rec = get_song_rec(sp, ['pop','rock','alt'], sf)
+    add_song_to_queue(sp, song_rec)
+    sp.next_track()
+
+    # Wait until song is actually skipped (some delay here, don't want runaway skipping)
+    while get_current_song(sp).track_id != song_rec.track_id:
+        pass
+
+    last_track = song_rec
+
+    print("I recommended: ")
+    print(song_rec)
+    print()
+    
 
 # Main Code
-token = authenticate_user()
+token, username = authenticate_user()
 if not token:
     print("Could not authenticate, aborting...")
     exit()
@@ -46,6 +69,9 @@ mood = md.Mood(NUM_SAMPLES)
 while True:
     # Wait for sample period
     while time.time() - prev_sample_time < SAMPLE_PERIOD:
+        # Check if song has changed
+        if track_has_changed():
+            handle_track_change(sp, mood)
         pass
 
     # Record emotions and update mood
@@ -55,7 +81,7 @@ while True:
 
     # Check if song has changed
     if track_has_changed():
-        print("Track changed!")
+        handle_track_change(sp, mood)
 
 sf = emotions_to_song_features(get_emotions())
 

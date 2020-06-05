@@ -103,7 +103,7 @@ def authenticate_user():
     else:
         print("User not authenticated")
 
-    return token
+    return token, username
 
 # Returns None if no song is playing
 def get_current_song(sp):

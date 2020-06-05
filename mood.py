@@ -91,13 +91,13 @@ class Mood:
         
         sf = SongFeatures()
         sf.valence = get_valence(**emotions)
-        print("Valence: ", sf.valence)
+        #print("Valence: ", sf.valence)
         sf.tempo = get_tempo(**emotions)
-        print("Tempo: ", sf.tempo)
+        #print("Tempo: ", sf.tempo)
         sf.energy = get_energy(**emotions)
-        print("Energy: ", sf.energy)
+        #print("Energy: ", sf.energy)
         sf.danceability = get_dancebility(**emotions)
-        print("Danceability: ", sf.danceability)
+        #print("Danceability: ", sf.danceability)
 
         return sf
     
