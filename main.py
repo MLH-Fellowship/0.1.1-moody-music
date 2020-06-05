@@ -179,7 +179,7 @@ class EntryWindow(Frame):
 
 class GenreSelectionWindow(Frame):
     def __init__(self,master=None,sp=None):
-        Frame.__init__(self,master)
+        #Frame.__init__(self,master)
         self.master = master
         self.init_window(sp)
 
@@ -189,9 +189,18 @@ class GenreSelectionWindow(Frame):
 
         items = get_genre_options(sp)
         self.ch_genres = dict(zip(items,np.zeros(len(items)).tolist()))
-
+        
         COLS = 7
         ROWS = math.ceil(1.0 * len(items) / COLS)
+
+        submitButton= Button(self.master,text="Submit",command=self.submit)
+        submitButton.grid(row=ROWS+2,column=int(COLS/2) + 1)#(relx=0.5,rely=0.5,anchor=CENTER)
+        submitButton.config(font=("Ariel",14))
+
+        label = Label(self.master,text="Choose at least one and at most five genres to listen to.",font=("Ariel",18))
+        label.grid(row=ROWS+1,columnspan=COLS+1)
+        label.configure(anchor=CENTER)
+        
         for i,item in enumerate(items):
             r = int(i / COLS) # row number
             c = i % COLS # col number
@@ -201,8 +210,7 @@ class GenreSelectionWindow(Frame):
             self.ch_genres[item].set('0')
             l.grid(row=r+1,column=c+1)
 
-        submitButton = Button(self,text="Submit",command=self.submit)
-        submitButton.grid(row=ROWS+1,column=int(COLS/2))
+
 
     def submit(self):
         checked = list()
@@ -218,7 +226,7 @@ root = Tk()
 root.geometry("800x800")
 
 genreSelect = GenreSelectionWindow(root,sp=spotipy.Spotify(auth=authenticate_user('dts182')))
-genreSelect.mainloop()
+genreSelect.master.mainloop()
 
 
 entry = EntryWindow(root)
