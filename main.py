@@ -7,10 +7,12 @@ import mood as md
 
 NUM_SAMPLES = 10 # number of samples for avg emotion
 SAMPLE_PERIOD = 1 # in seconds
+PERIODS_TO_REFRESH = 5 # how many periods to wait until playlist is updated
 PLAYLIST_NAME = "MoodyMusicPlaylist"
 
 prev_sample_time = 0
 last_track = None
+periods = 0
 
         
 def get_emotions():
@@ -56,6 +58,8 @@ def handle_track_change(sp, mood):
     print("I recommended: ")
     print(song_rec)
     print()
+
+def update 
     
 
 # Main Code
