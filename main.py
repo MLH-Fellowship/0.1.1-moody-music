@@ -43,6 +43,7 @@ def get_emotions():
 
     return emotions
 
+# Returns false if can't identify device
 def add_song_rec_to_queue(mood):
     global added_song_rec
     global genre_selection
@@ -51,23 +52,28 @@ def add_song_rec_to_queue(mood):
     print("Valence: ", sf.valence, " Danceability: ", sf.danceability, " Energy: ", sf.energy)
     song_rec = get_song_rec(sp,genre_selection,sf)
 
-    add_song_to_queue(sp,song_rec)
-    added_song_rec = True
+    try:
+        if added_song_rec == False:
+            add_song_to_queue(sp,song_rec)
+            added_song_rec = True
 
-    print("I recommended: ")
-    print(song_rec)
-    print()
-
+            print("I recommended: ")
+            print(song_rec)
+            print()
+    except:
+        print("Couldn't identify an active device. Try playing music on the device you want to use")
+        return False
+    
     return song_rec
 
 def next_song():
     global mood
     global added_song_rec
 
-    if not added_song_rec:
-        add_song_rec_to_queue(mood)
-    
-    sp.next_track()
+    res = add_song_rec_to_queue(mood)
+
+    if res != False:
+        sp.next_track()
 
 def get_user_live_emotions():
     global model
@@ -80,6 +86,7 @@ def get_user_live_emotions():
     faces_detected = face_haar_cascade.detectMultiScale(gray_img, 1.32, 5)
 
     if len(faces_detected) == 0:
+        print("No face detected")
         return None
     
     (x,y,w,h) = faces_detected[0]
@@ -254,7 +261,7 @@ sp = spotipy.Spotify(auth=token)
 root = Tk()
 root.geometry("800x800")
 
-genreSelect = GenreSelectionWindow(root,sp=spotipy.Spotify(auth=authenticate_user('dts182')))
+genreSelect = GenreSelectionWindow(root,sp)
 genreSelect.master.mainloop()
 
 # THIRD WINDOW: Listen to music
