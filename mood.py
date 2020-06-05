@@ -41,6 +41,19 @@ def get_dancebility(Anger,Disgust,Fear,Happy,Sad,Surprise,Neutral): #float betww
 		   return 0.999
 		return ((Anger + Happy)/2)*1.6666
 
+
+def get_valence_alt(Anger,Disgust,Fear,Happy,Sad,Surprise,Neutral):
+        arg = 1.5 * (Happy - Sad) + 0.4
+        return max(min(arg,1),0)
+
+def get_energy_alt(Anger,Disgust,Fear,Happy,Sad,Surprise,Neutral):
+        arg = 0.6 * (Happy - Sad) + 0.4
+        return max(min(arg,1),0)
+
+def get_danceability_alt(Anger,Disgust,Fear,Happy,Sad,Surprise,Neutral):
+        arg = 0.2 * (Happy - Sad) + 0.4
+        return max(min(arg,1),0)
+
 class Mood:
     def __init__(self, num_samples):
         self.anger = np.zeros(num_samples)
@@ -99,5 +112,20 @@ class Mood:
         sf.danceability = get_dancebility(**emotions)
         #print("Danceability: ", sf.danceability)
 
-        return sf   
+        return sf
+
+    def get_song_features_alt(self):
+        emotions = self.get_emotion_dict()
+        
+        sf = SongFeatures()
+        sf.valence = get_valence_alt(**emotions)
+        #print("Valence: ", sf.valence)
+        #sf.tempo = get_tempo(**emotions)
+        #print("Tempo: ", sf.tempo)
+        sf.energy = get_energy_alt(**emotions)
+        #print("Energy: ", sf.energy)
+        sf.danceability = get_danceability_alt(**emotions)
+        #print("Danceability: ", sf.danceability)
+
+        return sf
 	

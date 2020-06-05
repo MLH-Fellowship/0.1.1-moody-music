@@ -40,7 +40,8 @@ def get_emotions():
 def next_song():
     global mood
     
-    sf = mood.get_song_features()
+    sf = mood.get_song_features_alt()
+    print("Valence: ", sf.valence, " Danceability: ", sf.danceability, " Energy: ", sf.energy)
     song_rec = get_song_rec(sp,['pop','rock','alternative'],sf)
     add_song_to_queue(sp,song_rec)
     sp.next_track()
@@ -70,7 +71,6 @@ def get_user_live_emotions():
     img_pixels /= 255
 
     predictions = model.predict(img_pixels).tolist()[0]
-    print(predictions)
     max_index = np.argmax(predictions[0])
     emotions = ['Anger', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral']
     emotion = emotions[max_index]
@@ -140,8 +140,6 @@ while True:
     if emotions != None:
         mood.add_data_point(emotions)
         create_emotion_bar_graph(mood.get_emotion_dict())
-    else:
-        print("Scrap")
 
     app.showImg()
     
