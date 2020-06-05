@@ -83,7 +83,7 @@ class Song:
         return out
 
 # Returns authentication token if successful, None otherwise
-def authenticate_user():
+def authenticate_user(username):
     try:
         with open("env/.env") as f:
             data = f.readlines()
@@ -94,7 +94,6 @@ def authenticate_user():
 
     REDIRECT_URI = 'http://localhost:8080'
     scope = 'user-read-currently-playing user-read-playback-state user-modify-playback-state playlist-modify-public playlist-read-private playlist-modify-private'
-    username = input("Enter your Spotify username: ")
 
     token = util.prompt_for_user_token(username, scope, client_id, client_secret, REDIRECT_URI)
 
@@ -103,7 +102,7 @@ def authenticate_user():
     else:
         print("User not authenticated")
 
-    return token, username
+    return token
 
 # Returns None if no song is playing
 def get_current_song(sp):

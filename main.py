@@ -23,6 +23,7 @@ mood = md.Mood(NUM_SAMPLES)
 prev_sample_time = 0
 last_track = None
 added_song_rec = False
+username = ""
 
 # Inspired by: https://pythonprogramming.net/
 # ML models inspired by: https://sefiks.com/2018/01/01/facial-expression-recognition-with-keras/
@@ -143,6 +144,39 @@ class Window(Frame):
         img.image = render
         img.place(x=40,y=40)
 
+
+class EntryWindow(Frame):
+    def __init__(self, master=None):
+        Frame.__init__(self,master)
+        self.master = master
+        self.init_window()
+
+    def init_window(self):
+        self.master.title("MoodyMusic")
+        self.pack(fill=BOTH,expand=1)
+        
+        submitButton= Button(self,text="Submit",command=self.submit)
+        submitButton.place(relx=0.5,rely=0.5,anchor=CENTER)
+        submitButton.config(font=("Ariel",20))
+
+        label = Label(self,text="Please enter your Spotify username:",font=("Ariel",18))
+        label.place(relx=0.5,rely=0.15,anchor=CENTER)
+        
+        self.editText = Entry(self)
+        self.editText.place(relx=0.5,rely=0.25,anchor=CENTER)
+        self.editText.config(font=("Ariel",18))
+
+    def submit(self):
+        global username
+        username = str(self.editText.get())
+        self.master.destroy()
+
+root = Tk()
+root.geometry("800x800")
+
+entry = EntryWindow(root)
+entry.mainloop()
+
 root = Tk()
 root.geometry("800x800")
 app = Window(root)
@@ -155,7 +189,7 @@ face_haar_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 cap=cv2.VideoCapture(0)
 
 # Main Code
-token, username = authenticate_user()
+token = authenticate_user(username)
 if not token:
     print("Could not authenticate, aborting...")
     exit()
