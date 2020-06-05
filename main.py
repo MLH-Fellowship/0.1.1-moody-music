@@ -48,23 +48,33 @@ def next_song():
     print()
 
 def capture_face():
+    global model
+    
     ret,test_img=cap.read()# captures frame and returns boolean value and captured image
     if not ret:
         return
     gray_img= cv2.cvtColor(test_img, cv2.COLOR_BGR2GRAY)
     plt.imshow(gray_img)
-    plt.savefig("test.png")
 
     faces_detected = face_haar_cascade.detectMultiScale(gray_img, 1.32, 5)
-    for (x,y,w,h) in faces_detected:
-        roi_gray=gray_img[y:y+w,x:x+h]#cropping region of interest i.e. face area from  image
-        roi_gray=cv2.resize(roi_gray,(48,48))
-        img_pixels = image.img_to_array(roi_gray)
-        img_pixels = np.expand_dims(img_pixels, axis = 0)
-        img_pixels /= 255
-        
-        plt.imshow(roi_gray)
-        plt.savefig("face.png")
+
+    if len(faces_detected) == 0:
+        return None
+    
+    (x,y,w,h) = faces_detected[0]
+    roi_gray=gray_img[y:y+w,x:x+h]#cropping region of interest i.e. face area from  image
+    roi_gray=cv2.resize(roi_gray,(48,48))
+    img_pixels = image.img_to_array(roi_gray)
+    img_pixels = np.expand_dims(img_pixels, axis = 0)
+    img_pixels /= 255
+
+    predictions = model.predict(img_pixels)
+    max_index = np.argmax(predictions[0])
+    emotions = ('angry', 'disgust', 'fear', 'happy', 'sad', 'surprise', 'neutral')
+    emotion = emotions[max_index]
+
+    return predictions
+    
 
 class Window(Frame):
     def __init__(self, master=None):
