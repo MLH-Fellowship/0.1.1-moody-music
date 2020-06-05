@@ -43,15 +43,15 @@ def get_dancebility(Anger,Disgust,Fear,Happy,Sad,Surprise,Neutral): #float betww
 
 
 def get_valence_alt(Anger,Disgust,Fear,Happy,Sad,Surprise,Neutral):
-        arg = 1.5 * (Happy - Sad) + 0.4
+        arg = 1.2 * (Happy - Sad) - 0.4 * Fear + 0.4
         return max(min(arg,1),0)
 
 def get_energy_alt(Anger,Disgust,Fear,Happy,Sad,Surprise,Neutral):
-        arg = 0.6 * (Happy - Sad) + 0.4
+        arg = 1.0 * (Happy - Sad) - 0.5 * Fear + 0.4
         return max(min(arg,1),0)
 
 def get_danceability_alt(Anger,Disgust,Fear,Happy,Sad,Surprise,Neutral):
-        arg = 0.2 * (Happy - Sad) + 0.4
+        arg = 1.0 * (Happy - Sad) - 0.4 * Fear + 0.4
         return max(min(arg,1),0)
 
 class Mood:
