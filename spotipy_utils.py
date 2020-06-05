@@ -78,12 +78,12 @@ class Song:
         out += "Aritsts:\n"
         for artist in self.artists:
             out += (" * " + artist + "\n")
-        out += ("Duration: " + str(self.duration_ms) + " ms")
+        out += ("Duration: " + str(self.duration_ms) + " ms\n")
         out += ("Track ID: " + self.track_id)
         return out
 
 # Returns authentication token if successful, None otherwise
-def authenticate_user():
+def authenticate_user(username):
     try:
         with open("env/.env") as f:
             data = f.readlines()
@@ -93,8 +93,7 @@ def authenticate_user():
         return None # If file does not exist
 
     REDIRECT_URI = 'http://localhost:8080'
-    scope = 'user-read-currently-playing user-read-playback-state user-modify-playback-state'
-    username = input("Enter your Spotify username: ")
+    scope = 'user-read-currently-playing user-read-playback-state user-modify-playback-state playlist-modify-public playlist-read-private playlist-modify-private'
 
     token = util.prompt_for_user_token(username, scope, client_id, client_secret, REDIRECT_URI)
 
@@ -158,3 +157,19 @@ def add_song_to_queue(sp, song):
 
     sp.add_to_queue(song.track_id)
     return True
+
+def get_playlist_id(sp, username, target_name):
+    user_playlists = sp.user_playlists(username)['items']
+
+    for playlist in user_playlists:
+        playlist_name = playlist['name']
+        if playlist_name == target_name:
+            return playlist['id']
+    return None
+
+def create_playlist(sp, username, name):
+    playlist = sp.user_playlist_create(username, name, public=False)
+    return playlist['id']
+
+def get_genre_options(sp):
+    return sp.recommendation_genre_seeds()['genres']
