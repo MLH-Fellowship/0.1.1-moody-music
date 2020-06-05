@@ -22,6 +22,7 @@ mood = md.Mood(NUM_SAMPLES)
 prev_sample_time = 0
 
 # Inspired by: https://pythonprogramming.net/
+# ML models inspired by: https://sefiks.com/2018/01/01/facial-expression-recognition-with-keras/
 def get_emotions():
     emotions = dict()
 
@@ -47,14 +48,13 @@ def next_song():
     print(song_rec)
     print()
 
-def capture_face():
+def get_user_live_emotions():
     global model
     
     ret,test_img=cap.read()# captures frame and returns boolean value and captured image
     if not ret:
         return
     gray_img= cv2.cvtColor(test_img, cv2.COLOR_BGR2GRAY)
-    plt.imshow(gray_img)
 
     faces_detected = face_haar_cascade.detectMultiScale(gray_img, 1.32, 5)
 
@@ -68,13 +68,25 @@ def capture_face():
     img_pixels = np.expand_dims(img_pixels, axis = 0)
     img_pixels /= 255
 
-    predictions = model.predict(img_pixels)
+    predictions = model.predict(img_pixels).tolist()[0]
+    print(predictions)
     max_index = np.argmax(predictions[0])
-    emotions = ('angry', 'disgust', 'fear', 'happy', 'sad', 'surprise', 'neutral')
+    emotions = ['Anger', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral']
     emotion = emotions[max_index]
 
-    return predictions
-    
+    return dict(zip(emotions,predictions))
+
+def create_emotion_bar_graph(emotions):
+    objects = list(emotions.keys())
+    y_pos = np.arange(len(objects))
+
+    plt.bar(y_pos,list(emotions.values()),align='center')
+    plt.xticks(y_pos,objects)
+    plt.ylabel('percentage')
+    plt.title('emotion')
+
+    plt.savefig("emotions.png")
+    plt.clf()
 
 class Window(Frame):
     def __init__(self, master=None):
@@ -113,12 +125,14 @@ while True:
 
     # Record emotions
     prev_sample_time = time.time()
-    capture_face()
-
-
+    emotions = get_user_live_emotions()
+    
     # Update mood
-    emotions = get_emotions()
-    mood.add_data_point(emotions)
+    if emotions != None:
+        mood.add_data_point(emotions)
+        create_emotion_bar_graph(mood.get_emotion_dict())
+    else:
+        print("Scrap")
     
     root.update_idletasks()
     root.update()

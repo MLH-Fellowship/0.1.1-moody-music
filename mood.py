@@ -99,6 +99,5 @@ class Mood:
         sf.danceability = get_dancebility(**emotions)
         #print("Danceability: ", sf.danceability)
 
-        return sf
-    
+        return sf   
 	
