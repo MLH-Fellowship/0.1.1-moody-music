@@ -45,10 +45,11 @@ def get_emotions():
 
 def add_song_rec_to_queue(mood):
     global added_song_rec
+    global genre_selection
     
     sf = mood.get_song_features_alt()
     print("Valence: ", sf.valence, " Danceability: ", sf.danceability, " Energy: ", sf.energy)
-    song_rec = get_song_rec(sp,['pop','rock','alternative'],sf)
+    song_rec = get_song_rec(sp,genre_selection,sf)
 
     add_song_to_queue(sp,song_rec)
     added_song_rec = True
