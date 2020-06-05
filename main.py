@@ -133,8 +133,10 @@ class Window(Frame):
     def init_window(self):
         self.master.title("MoodyMusic")
         self.pack(fill=BOTH,expand=1)
+        
         skipButton = Button(self, text="Skip", command=next_song)
-        skipButton.place(x=0,y=0)
+        skipButton.pack(side=BOTTOM)
+        skipButton.config(font=("Ariel",24))
 
     def showImg(self):
         load = Image.open('emotions.png')
@@ -142,7 +144,7 @@ class Window(Frame):
 
         img = Label(self,image=render)
         img.image = render
-        img.place(x=40,y=40)
+        img.place(relx=0.5,rely=0.4,anchor=CENTER)
 
 
 class EntryWindow(Frame):
@@ -161,6 +163,9 @@ class EntryWindow(Frame):
 
         label = Label(self,text="Please enter your Spotify username:",font=("Ariel",18))
         label.place(relx=0.5,rely=0.15,anchor=CENTER)
+
+        label2 = Label(self,text="Instructions:\n Make sure your Spotify queue is cleared before using!",font=("Ariel",16))
+        label2.place(relx=0.5,rely=0.7,anchor=CENTER)
         
         self.editText = Entry(self)
         self.editText.place(relx=0.5,rely=0.25,anchor=CENTER)
